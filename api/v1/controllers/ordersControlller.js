@@ -2,12 +2,14 @@ import { StatusCodes } from 'http-status-codes';
 // import NotFoundError from '../../../errors/not-found.js';
 // import BadRequestError from '../../../errors/bad-request.js';
 import Order from '../models/Order.js';
+import { SendEmail } from '../../../middlewares/mailServices.js';
 
 export const createOrder = async (req, res, next) => {
     try {
         const {user:{userID:user}} = req;
          const order = await Order.create({...req.body,user});
-        return res.status(StatusCodes.OK).json({ success: true, order });
+         req.order = order;
+         next();
     } catch (error) {
         next(error);
     }

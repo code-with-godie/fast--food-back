@@ -14,6 +14,9 @@ const orderSchema = new mongoose.Schema(
         address: {
             type: String,
         },
+        receipt_url: {
+            type: String,
+        },
         paymentType: {
             type:String,
             enum: ['card','paypal','mpesa'],
