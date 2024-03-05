@@ -4,5 +4,5 @@ import { payWithMpesa, payWithPaypal, payWithStripe } from '../controllers/payme
 const Router = express.Router()
 Router.route('/card').post(payWithStripe);
 Router.route('/mpesa').post(payWithMpesa);
-Router.route('/paypal').post(payWithPaypal);
+Router.route('/paypal').get(payWithPaypal);
 export default Router

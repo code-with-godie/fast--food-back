@@ -30,7 +30,7 @@ export const payWithPaypal = async  (req,res,next)=>{
             {
                 amount:{
                     currency_code:'USD',
-                    value:req.body.amount,
+                    value:100,
                     // currency_code:'USD',
                     // item_total:{
                     //     currency_code:'USD',
