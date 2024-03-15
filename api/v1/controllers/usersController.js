@@ -143,25 +143,15 @@ export const updateUser = async (req, res, next) => {
         const {
             params: { id: userID },
             user: { userID: loggedInUser },
-            body: { profilePic },
         } = req;
+        console.log(userID);
 
         let user = await Users.findById(loggedInUser);
         if (!user) {
             throw new NotFoundError('no use with the provided id!');
         }
-        if (userID !== loggedInUser) {
+        if (userID !== loggedInUser || user.role !== 'admin') {
             throw new BadRequestError('you can only update your own account!');
-        }
-        if (profilePic) {
-            // console.log('updating....');
-            // const res = await updateFile(profilePic, 'instagram-clone/users');
-            // const { secure_url, public_id } = res;
-            // req.body.profilePic = { url: secure_url, public_id };
-            req.body.profilePic = {
-                url: profilePic,
-                public_id: Date.now().toString(),
-            };
         }
         await Users.findByIdAndUpdate(userID, { ...req.body });
         user = await Users.findById(loggedInUser, { password: 0 });
@@ -171,21 +161,22 @@ export const updateUser = async (req, res, next) => {
     }
 };
 export const deleteUser = async (req, res, next) => {
-    try {
+     try {
         const {
             params: { id: userID },
             user: { userID: loggedInUser },
         } = req;
-        if (userID !== loggedInUser) {
-            throw new BadRequestError('you can only delete your own account!');
-        }
-        const user = await Users.findByIdAndDelete(userID);
+        console.log(userID);
+
+        let user = await Users.findById(loggedInUser);
         if (!user) {
             throw new NotFoundError('no use with the provided id!');
         }
-        return res
-            .status(StatusCodes.OK)
-            .json({ success: true, message: 'account successfully deleted!' });
+        if (userID !== loggedInUser || user.role !== 'admin') {
+            throw new BadRequestError('you can only delete your own account!');
+        }
+        await Users.findByIdAndDelete(userID);
+        return res.status(StatusCodes.OK).json({ success: true });
     } catch (error) {
         next(error);
     }

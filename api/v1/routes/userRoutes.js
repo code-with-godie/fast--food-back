@@ -7,4 +7,7 @@ Router.route('/').get(authorize,getAllUsers);
 Router.route('/auth/login').post(login);
 Router.route('/auth/register').post(register);
 Router.route('/auth/OuthLogin').post(OauthLogin);
+Router.route('/update/:id').patch(updateUser);
+Router.route('/delete/:id').delete(deleteUser);
+Router.route('/profile/:id').post(authorize ,updateUser);
 export default Router

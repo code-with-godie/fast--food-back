@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 // import NotFoundError from '../../../errors/not-found.js';
 // import BadRequestError from '../../../errors/bad-request.js';
 import Order from '../models/Order.js';
-import { SendEmail } from '../../../middlewares/mailServices.js';
+// import { SendEmail } from '../../../middlewares/mailServices.js';
 
 export const createOrder = async (req, res, next) => {
     try {
@@ -16,8 +16,14 @@ export const createOrder = async (req, res, next) => {
 };
 export const getUserOrders = async (req, res, next) => {
     try {
-        const {params:{userID:user}} = req;
-         const orders = await Order.find({user}).populate({ path:'user', select:'name profilePic'});
+        const {params:{userID:user},query:{admin}} = req;
+        let orders = [];
+        if(admin === 'admin'){
+            console.log(admin);
+            orders = await Order.find({}).populate({ path:'user', select:'firstName lastName profilePic'}).sort({createdAt:-1});
+            return res.status(StatusCodes.OK).json({ success: true, orders });
+        }
+         orders = await Order.find({user}).populate({ path:'user', select:'firstName lastName profilePic'});
         return res.status(StatusCodes.OK).json({ success: true, orders });
     } catch (error) {
         next(error);
