@@ -3,11 +3,13 @@ import Stripe from 'stripe'
 import Paypal from '@paypal/checkout-server-sdk'
 import paypal from 'paypal-rest-sdk'
 export const payWithStripe = async  (req,res,next)=>{
+    console.log(req.body);
     try {
         const stripe = new Stripe(process.env.STRIPE_KEY);
         stripe.charges.create({
             source:req.body.tokenId,
             amount:req.body.amount,
+            receipt_email:req.body.email,
             currency:'usd'
         },(stripeError,stripeRes)=>{
             if(stripeError){

@@ -8,8 +8,9 @@ export const createOrder = async (req, res, next) => {
     try {
         const {user:{userID:user}} = req;
          const order = await Order.create({...req.body,user});
-         req.order = order;
-         next();
+         return res.json({success:true,order})
+        //  req.order = order;
+        //  next();
     } catch (error) {
         next(error);
     }

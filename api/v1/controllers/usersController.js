@@ -142,19 +142,9 @@ export const updateUser = async (req, res, next) => {
     try {
         const {
             params: { id: userID },
-            user: { userID: loggedInUser },
         } = req;
-        console.log(userID);
-
-        let user = await Users.findById(loggedInUser);
-        if (!user) {
-            throw new NotFoundError('no use with the provided id!');
-        }
-        if (userID !== loggedInUser || user.role !== 'admin') {
-            throw new BadRequestError('you can only update your own account!');
-        }
         await Users.findByIdAndUpdate(userID, { ...req.body });
-        user = await Users.findById(loggedInUser, { password: 0 });
+        const user = await Users.findById(userID, { password: 0 });
         return res.status(StatusCodes.OK).json({ success: true, user });
     } catch (error) {
         next(error);
@@ -164,18 +154,8 @@ export const deleteUser = async (req, res, next) => {
      try {
         const {
             params: { id: userID },
-            user: { userID: loggedInUser },
         } = req;
-        console.log(userID);
-
-        let user = await Users.findById(loggedInUser);
-        if (!user) {
-            throw new NotFoundError('no use with the provided id!');
-        }
-        if (userID !== loggedInUser || user.role !== 'admin') {
-            throw new BadRequestError('you can only delete your own account!');
-        }
-        await Users.findByIdAndDelete(userID);
+      Users.findByIdAndDelete(userID);
         return res.status(StatusCodes.OK).json({ success: true });
     } catch (error) {
         next(error);
